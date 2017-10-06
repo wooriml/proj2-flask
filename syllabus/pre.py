@@ -8,7 +8,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s',
                     level=logging.INFO)
 log = logging.getLogger(__name__)
 
-base = arrow.now()   # Default, replaced if file has 'begin: ...'
+today = arrow.now()   # Default, replaced if file has 'begin: ...'
 
 
 def process(raw):
@@ -41,6 +41,7 @@ def process(raw):
         if field == "begin":
             try:
                 base = arrow.get(content, "MM/DD/YYYY")
+
                 # print("Base date {}".format(base.isoformat()))
             except:
                 raise ValueError("Unable to parse date {}".format(content))
@@ -52,23 +53,31 @@ def process(raw):
             entry['topic'] = ""
             entry['project'] = ""
             entry['week'] = content
-
+        
+            #find the inerval of the week, and compare with today's date
+            base = base.floor("week")
+            ceil = base.ceil("week")
+            if today.floor("week") == base:
+                entry["today"] = content
+            entry['date'] = base
+            base = base.shift(weeks=+1)
+        
         elif field == 'topic' or field == 'project':
             entry[field] = content
 
         else:
             raise ValueError("Syntax error in line: {}".format(line))
-
+        
     if entry:
         cooked.append(entry)
-
+ 
     return cooked
 
 
 def main():
     f = open("data/schedule.txt")
     parsed = process(f)
-    print(parsed)
+    #print(parsed)
 
 
 if __name__ == "__main__":

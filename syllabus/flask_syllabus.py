@@ -29,9 +29,7 @@ else:
 if configuration.DEBUG:
     app.logger.setLevel(logging.DEBUG)
 
-# Pre-processed schedule is global, so be careful to update
-# it atomically in the view functions.
-#
+
 schedule = pre.process(open(configuration.SYLLABUS))
 
 
@@ -93,7 +91,7 @@ def no_you_cant(error):
 def format_arrow_date(date):
     try:
         normal = arrow.get(date)
-        return normal.format("ddd MM/DD/YYYY")
+        return normal.format("MM/DD/YYYY")
     except:
         return "(bad date)"
 

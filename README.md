@@ -1,4 +1,9 @@
 # proj2-flask
+author = Jenny Lee
+Project2 for week two
+
+
+
 A starter project for using the Flask framework
 
 Remember to remove these instructions and replace them with the 
